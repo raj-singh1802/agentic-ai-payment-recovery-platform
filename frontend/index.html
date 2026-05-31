@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8" />
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>
+        AI Collections Command Center
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    />
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/chart.js"
+    ></script>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <div class="logo">
+
+                <i class="fa-solid fa-robot"></i>
+
+                <h2>AI Collections</h2>
+
+            </div>
+
+            <nav>
+
+                <ul>
+
+                    <li class="active">
+                        <i class="fa-solid fa-chart-line"></i>
+                        Dashboard
+                    </li>
+
+                    <a href="/customers.html">
+                        <li>
+                            👥 Customers
+                        </li>
+                    </a>
+
+                    <li>
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        Escalations
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-brain"></i>
+                        AI Activity
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-chart-pie"></i>
+                        Analytics
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-gear"></i>
+                        Settings
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+
+        <main class="main-content">
+
+            <!-- HEADER -->
+
+            <header class="topbar">
+
+                <h1>
+                    AI Collections Command Center
+                </h1>
+
+                <div class="status">
+
+                    <span class="live-dot"></span>
+
+                    System Active
+
+                </div>
+
+            </header>
+
+            <!-- METRIC CARDS -->
+
+            <section class="metrics">
+
+                <div class="card">
+
+                    <h3>Total Customers</h3>
+
+                    <p id="totalCustomers">
+                        0
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Pending Payments</h3>
+
+                    <p id="pendingPayments">
+                        0
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Escalated Cases</h3>
+
+                    <p id="escalatedCases">
+                        0
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Calls Today</h3>
+
+                    <p id="callsToday">
+                        0
+                    </p>
+
+                </div>
+
+            </section>
+
+            <!-- ANALYTICS CHARTS -->
+
+            <section class="charts-section">
+
+                <div class="chart-card">
+
+                    <h2>
+                        Payment Status Distribution
+                    </h2>
+
+                    <canvas id="paymentStatusChart"></canvas>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h2>
+                        Delayed Days Distribution
+                    </h2>
+
+                    <canvas id="delayChart"></canvas>
+
+                </div>
+
+            </section>
+            
+            <!-- AI RECOMMENDATIONS -->
+
+            <section class="activity-section">
+
+            <div class="section-header">
+
+                    <h2>
+                        🤖 Autonomous AI Recommendations
+                    </h2>
+                
+                </div>
+            
+                <div
+                    class="activity-feed"
+                    id="recommendationFeed"
+                >
+            
+                </div>
+            
+            </section>
+
+            <!-- AI ACTIVITY -->
+
+            <section class="activity-section">
+
+                <div class="section-header">
+
+                    <h2>
+                        Live AI Workflow Activity
+                    </h2>
+
+                </div>
+
+                <div
+                    class="activity-feed"
+                    id="activityFeed"
+                >
+
+                    <div class="activity-item">
+                        📞 AI initiated customer reminder call
+                    </div>
+
+                    <div class="activity-item">
+                        🧠 Semantic payment analysis completed
+                    </div>
+
+                    <div class="activity-item">
+                        ⚠️ Escalation triggered for delayed payment
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- CUSTOMER MODAL -->
+
+    <div
+        id="customerModal"
+        class="modal"
+    >
+
+        <div class="modal-content">
+
+            <span
+                class="close-modal"
+                id="closeModal"
+            >
+                &times;
+            </span>
+
+            <h2>
+                Customer Intelligence Panel
+            </h2>
+
+            <div
+                id="modalBody"
+                class="modal-body"
+            >
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
