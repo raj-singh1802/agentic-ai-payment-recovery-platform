@@ -64,6 +64,8 @@ function renderCustomers(customers) {
 
         customers.forEach(customer => {
 
+
+
             const status =
                 customer["Payment Status"] || 'Pending';
 
@@ -71,8 +73,22 @@ function renderCustomers(customers) {
                 document.createElement('tr');
 
             row.innerHTML = `
-            <td>${customer.Name || '-'}</td>
-            <td>${customer.Invoice || '-'}</td>
+                        <td>
+
+                            <span
+
+                                class="customer-link"
+
+                                onclick="openEscalationCustomer('${customer.Invoice}')"
+
+                            >
+
+                                ${customer.Name || '-'}
+
+                            </span>
+
+                        </td>
+                        <td>${customer.Invoice || '-'}</td>
             <td>${formatAmount(customer["Due Amount"])}</td>
             <td class="${getStatusClass(status)}">${status}</td>
             <td>${customer["Delayed Days"] || 0}</td>
@@ -84,10 +100,7 @@ function renderCustomers(customers) {
 
             row.style.cursor = 'pointer';
 
-            row.addEventListener(
-                'click',
-                () => openCustomerModal(customer)
-            );
+
 
             tableBody.appendChild(row);
         });
@@ -446,9 +459,29 @@ async function openCustomerModal(customer) {
 
     if (!modal || !modalBody) return;
 
+    const timelineHtml =
+        workflowHistory.length
+            ? workflowHistory.map(item => `
+
+                <div class="timeline-item">
+
+                    <strong>
+                        ${item.timestamp}
+                    </strong>
+
+                    <br/>
+
+                    ${item.event}
+
+                </div>
+
+            `).join('')
+            : '<p>No workflow history yet.</p>';
+
     modalBody.innerHTML = `
 
         <div class="customer-grid">
+
 
             <div class="modal-card customer-card">
 
@@ -561,11 +594,11 @@ async function openCustomerModal(customer) {
         </div>
 
 
-        <div class="modal-card">
+            <div class="modal-card">
 
-            <h3>
-                AI Recovery Intelligence
-            </h3>
+                <h3>
+                    AI Recovery Intelligence
+                </h3>
 
             <p>
                 <strong>
@@ -576,12 +609,25 @@ async function openCustomerModal(customer) {
             </p>
 
             <p>
+
                 <strong>
-                    Risk Level:
+                    Risk:
                 </strong>
 
-                ${customer.riskLevel || 'Low'}
+                <span
+
+                    class="risk-badge"
+
+                    data-risk="${customer.riskLevel || 'Low'}"
+
+                >
+
+                    ${customer.riskLevel || 'Low'}
+
+                </span>
+
             </p>
+
 
         </div>
 
@@ -679,6 +725,27 @@ async function loadCustomers() {
             error
         );
     }
+}
+
+window.openEscalationCustomer = function openEscalationCustomer(invoiceNumber) {
+
+    const customer =
+        allCustomers.find(
+            customer =>
+                customer.Invoice ===
+                invoiceNumber
+        );
+
+    if (!customer) {
+
+        console.error(
+            'Customer not found'
+        );
+
+        return;
+    }
+
+    openCustomerModal(customer);
 }
 
 async function loadActivities() {
@@ -811,6 +878,160 @@ async function loadRecommendations() {
     }
 }
 
+async function loadEscalations() {
+
+    const tableBody =
+        document.getElementById(
+            'escalationTableBody'
+        );
+
+    if (!tableBody) return;
+
+    try {
+
+        const response =
+            await fetch(
+                '/api/escalations'
+            );
+
+        const escalations =
+            await response.json();
+
+        tableBody.innerHTML = '';
+
+        let totalRecovery = 0;
+
+        escalations.forEach(
+            customer => {
+
+                totalRecovery +=
+                    Number(
+                        customer.recoveryScore || 0
+                    );
+
+                tableBody.innerHTML += `
+                    <tr>
+
+                        <td>
+
+                            <span
+
+                                class="customer-link"
+
+                                onclick="openEscalationCustomer('${customer.Invoice}')"
+
+                            >
+
+                                ${customer.Name || '-'}
+
+                            </span>
+
+                        </td>
+
+                        <td>${customer.Invoice || '-'}</td>
+
+                        <td>₹${Number(
+                            customer["Due Amount"]
+                        ).toLocaleString('en-IN')}</td>
+
+                        <td>${customer["Delayed Days"] || 0}</td>
+
+                        <td>${Number(
+                            customer.recoveryScore || 0
+                        )}%</td>
+
+                        <td>🔥 ${customer.priorityScore || 0}</td>
+
+                        <td>Escalated</td>
+
+                    </tr>
+                `;
+            }
+        );
+
+        const escalatedCountEl =
+            document.getElementById(
+                'escalatedCount'
+            );
+
+        if (escalatedCountEl) {
+            escalatedCountEl.innerText = escalations.length;
+        }
+
+        const highRiskCountEl =
+            document.getElementById(
+                'highRiskCount'
+            );
+
+        if (highRiskCountEl) {
+            highRiskCountEl.innerText = escalations.filter(
+                customer =>
+                    Number(customer.recoveryScore || 0) < 40
+            ).length;
+        }
+
+        const avgRecoveryEl =
+            document.getElementById(
+                'avgRecoveryScore'
+            );
+
+        if (avgRecoveryEl) {
+            avgRecoveryEl.innerText = escalations.length
+                ? Math.round(
+                    totalRecovery / escalations.length
+                ) + '%'
+                : '0%';
+        }
+
+        const supervisorCallsEl =
+            document.getElementById(
+                'supervisorCalls'
+            );
+
+        if (supervisorCallsEl) {
+            supervisorCallsEl.innerText = escalations.length;
+        }
+
+        const feed =
+            document.getElementById(
+                'escalationActivityFeed'
+            );
+
+        if (feed) {
+
+            const activityResponse =
+                await fetch('/api/activity');
+
+            const activities =
+                await activityResponse.json();
+
+            feed.innerHTML = activities
+                .slice(0, 10)
+                .map(activity => `
+                    <div class="activity-item">
+
+                        <strong>
+                            ${activity.timestamp}
+                        </strong>
+
+                        <br>
+
+                        ${activity.message}
+
+                    </div>
+                `)
+                .join('');
+        }
+
+    } catch (error) {
+
+        console.error(
+            'Failed loading escalations',
+            error
+        );
+    }
+}
+
 const dashboardHasCharts =
     document.getElementById(
         'paymentStatusChart'
@@ -830,6 +1051,8 @@ if (dashboardHasRecommendations) {
 
     loadRecommendations();
 }
+
+
 
 
 const closeModalBtn =
@@ -907,9 +1130,173 @@ if (socket) {
             loadCustomers();
 
             loadRecommendations();
+
+            loadEscalations();
+
+
+
         }
     );
 }
 
+
 loadCustomers();
+
+if (
+    document.getElementById(
+        'escalationTableBody'
+    )
+) {
+
+    loadEscalations();
+
+}
+
+async function loadActivityCenter() {
+
+    const timeline =
+        document.getElementById(
+            'activityTimeline'
+        );
+
+    if (!timeline) return;
+
+    try {
+
+        const response =
+            await fetch(
+                '/api/activity'
+            );
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Activity API failed: ${response.status}`
+            );
+        }
+
+        const activities =
+            await response.json();
+
+        // KPI COUNTS
+
+        const callsTodayCountEl =
+            document.getElementById(
+                'callsTodayCount'
+            );
+
+        const responsesCountEl =
+            document.getElementById(
+                'responsesCount'
+            );
+
+        const escalationCountEl =
+            document.getElementById(
+                'escalationCount'
+            );
+
+        const workflowEventsCountEl =
+            document.getElementById(
+                'workflowEventsCount'
+            );
+
+        if (workflowEventsCountEl) {
+
+            workflowEventsCountEl.textContent =
+                activities.length;
+        }
+
+        // Heuristic counts from the existing activity feed messages
+        // (Improves immediately without requiring new backend endpoints)
+        const callsToday =
+            activities.filter(a =>
+                (a.message || '').toLowerCase().includes('call attempted')
+                || (a.message || '').toLowerCase().includes('ai initiated customer reminder call')
+                || (a.message || '').toLowerCase().includes('ai call')
+                || (a.message || '').toLowerCase().includes('call')
+            ).length;
+
+        const responsesCount =
+            activities.filter(a =>
+                (a.message || '').toLowerCase().includes('promised payment')
+                || (a.message || '').toLowerCase().includes('payment')
+                || (a.message || '').toLowerCase().includes('response')
+                || (a.message || '').toLowerCase().includes('customer')
+            ).length;
+
+        const escalationCount =
+            activities.filter(a =>
+                (a.message || '').toLowerCase().includes('escalation triggered')
+                || (a.message || '').toLowerCase().includes('escalated')
+                || (a.message || '').toLowerCase().includes('supervisor')
+                || (a.message || '').toLowerCase().includes('escalation')
+            ).length;
+
+        if (callsTodayCountEl) {
+            callsTodayCountEl.textContent = callsToday;
+        }
+
+        if (responsesCountEl) {
+            responsesCountEl.textContent = responsesCount;
+        }
+
+        if (escalationCountEl) {
+            escalationCountEl.textContent = escalationCount;
+        }
+
+        timeline.innerHTML = '';
+
+        if (!activities.length) {
+
+            timeline.innerHTML = `
+                <div class="activity-item">
+                    No workflow activity yet.
+                </div>
+            `;
+
+            return;
+        }
+
+        activities.forEach(activity => {
+
+
+            timeline.innerHTML += `
+
+                <div class="activity-card">
+
+                    <div class="activity-time">
+                        ${activity.timestamp}
+                    </div>
+
+                    <div class="activity-message">
+                        ${activity.message}
+                    </div>
+
+                </div>
+
+            `;
+        });
+
+    } catch (error) {
+
+        console.error(
+            'Failed to load activity timeline',
+            error
+        );
+    }
+}
+
+if (
+    document.getElementById(
+        'activityTimeline'
+    )
+) {
+
+    loadActivityCenter();
+
+}
+
+
+
+
 

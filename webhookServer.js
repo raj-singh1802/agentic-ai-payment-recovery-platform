@@ -70,14 +70,25 @@ app.get(
         const invoiceNumber =
             req.params.invoice;
 
+        console.log(
+            'Invoice Requested:',
+            invoiceNumber
+        );
+
         const history =
             getWorkflowHistory(
                 invoiceNumber
             );
 
+        console.log(
+            'History Found:',
+            history
+        );
+
         res.json(history);
     }
 );
+
 
 const __filename =
     fileURLToPath(import.meta.url);
@@ -112,6 +123,7 @@ app.get('/', (req, res) => {
 // CUSTOMERS API
 
 app.get('/api/customers', (req, res) => {
+
 
     try {
 
@@ -218,6 +230,41 @@ app.get(
         }
     }
 );
+
+// ESCALATIONS API
+
+app.get(
+    '/api/escalations',
+    (req, res) => {
+
+        try {
+
+            const customers =
+                readCustomerData();
+
+            const escalated =
+                customers.filter(
+                    customer =>
+                        customer["Escalation Status"] === 'Yes'
+                );
+
+            res.json(escalated);
+
+        } catch (error) {
+
+            console.error(error);
+
+            res.status(500).json({
+                error:
+                    'Failed to fetch escalations'
+            });
+        }
+    }
+);
+
+
+
+
 
 
 // WEBHOOK

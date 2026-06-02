@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>AI Activity Center</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <div class="logo">
+
+                🤖 AI Collections
+
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a href="index.html">
+                    📈 Dashboard
+                </a>
+
+                <a href="customers.html">
+                    👥 Customers
+                </a>
+
+                <a href="escalations.html">
+                    ⚠️ Escalations
+                </a>
+
+                <a
+                    href="activity.html"
+                    class="active"
+                >
+                    🧠 AI Activity
+                </a>
+
+                <a href="#">
+                    📊 Analytics
+                </a>
+
+                <a href="#">
+                    ⚙️ Settings
+                </a>
+
+            </nav>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+
+        <main class="main-content">
+
+            <h1>AI Activity Center</h1>
+
+            <!-- KPI CARDS -->
+
+            <section class="metrics">
+
+                <div class="card" style="margin-bottom: 8px;">
+
+
+                    <h3>AI Calls Today</h3>
+
+                    <p id="callsTodayCount">0</p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Customer Responses</h3>
+
+                    <p id="responsesCount">0</p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Escalations</h3>
+
+                    <p id="escalationCount">0</p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Total Activities</h3>
+
+                    <p id="workflowEventsCount">0</p>
+
+                </div>
+
+            </section>
+
+            <!-- FILTERS -->
+
+
+            <div class="table-toolbar">
+
+                <input
+                    type="text"
+                    id="activitySearch"
+                    placeholder="Search activity..."
+                >
+
+                <select id="activityFilter">
+
+                    <option value="All">
+                        All Activities
+                    </option>
+
+                    <option value="Call">
+                        AI Calls
+                    </option>
+
+                    <option value="Response">
+                        Customer Responses
+                    </option>
+
+                    <option value="Escalation">
+                        Escalations
+                    </option>
+
+                    <option value="Workflow">
+                        Workflow Updates
+                    </option>
+
+                    <option value="System">
+                        System Events
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- ACTIVITY TIMELINE -->
+
+            <div class="dashboard-card">
+
+                <h2>
+                    Live AI Activity Timeline
+                </h2>
+
+                <div id="activityTimeline">
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
+

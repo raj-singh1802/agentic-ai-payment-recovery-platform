@@ -26,10 +26,40 @@ body {
 
     width: 260px;
 
+    min-width: 260px;
+
     background: #111827;
 
     padding: 30px 20px;
 }
+
+.sidebar-nav {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    margin-top: 30px;
+}
+
+.sidebar-nav a {
+
+    display: block;
+
+    padding: 14px 18px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+}
+
+.sidebar-nav a.active {
+
+    background: rgba(255,255,255,0.08);
+}
+
 
 .logo {
 
@@ -87,6 +117,30 @@ body {
     padding: 30px;
 }
 
+/* PAGE HEADER SPACING */
+
+.main-content h1 {
+
+    margin-bottom: 25px;
+}
+
+/* ALIGN CUSTOMER TABLE TOOLBAR */
+
+.table-container {
+
+    margin-top: 10px;
+}
+
+/* align customer page toolbar with heading */
+
+.main-content > .table-container {
+
+    margin-top: 0;
+}
+
+
+
+
 .topbar {
 
     display: flex;
@@ -121,10 +175,11 @@ body {
 
     grid-template-columns: repeat(4, 1fr);
 
-    gap: 20px;
+    gap: 24px;
 
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
+
 
 .card {
 
@@ -214,16 +269,55 @@ tr {
     color: #ef4444;
 }
 
+/* HIGH RISK ACCOUNTS */
+
+#highRiskAccounts {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    margin-top: 10px;
+}
+
+.risk-customer {
+
+    background: #0f172a;
+
+    padding: 14px 16px;
+
+    border-radius: 12px;
+
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+.risk-customer strong {
+
+    font-size: 16px;
+
+    color: white;
+
+    display: block;
+
+    margin-bottom: 6px;
+}
+
 /* ACTIVITY */
 
 .activity-feed {
+
 
     display: flex;
 
     flex-direction: column;
 
     gap: 15px;
+
+    padding: 24px;
 }
+
 
 .activity-item {
 
@@ -267,7 +361,7 @@ canvas {
 
     width: 100% !important;
 
-    height: 300px !important;
+    height: 450px !important;
 }
 
 /* MODAL */
@@ -282,7 +376,7 @@ canvas {
 
     left: 0;
 
-    top: 0;
+    top: 0px;
 
     width: 100%;
 
@@ -297,9 +391,13 @@ canvas {
 
     background: #1e293b;
 
-    width: 70%;
+    width: fit-content;
 
-    margin: 5% auto;
+    max-width: 1020px;
+
+    margin: auto;
+    margin-top: 150px;
+
 
     padding: 30px;
 
@@ -317,20 +415,24 @@ canvas {
 }
 
 .customer-grid {
-
     display: grid;
 
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns:
+        minmax(300px, 1fr)
+        minmax(300px, 1fr)
+        minmax(300px, 1fr);
 
-    gap: 40px;
+    gap: 24px;
 
-    margin-top: 40px;
+    align-items: stretch;
 }
 
-.timeline-card {
+
+.modal-card.timeline-card {
 
     grid-column: 1 / -1;
 }
+
 
 @media (max-width: 900px) {
 
@@ -365,18 +467,24 @@ canvas {
 
     display: grid;
 
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
 
-    gap: 20px;
+    gap: 28px;
+
+    align-items: start;
 }
 
+
+
 .modal-card {
-
-    background: #0f172a;
-
+    background: #08152f;
     padding: 20px;
+    border-radius: 16px;
 
-    border-radius: 14px;
+    width: 100%;
+    min-height: 160px;
+
+    box-sizing: border-box;
 }
 
 .modal-card h3 {
@@ -446,3 +554,129 @@ canvas {
 
     border-radius: 10px;
 }
+
+/* PAGE TITLES */
+
+.page-title {
+
+    margin-bottom: 30px;
+}
+
+/* ESCALATIONS */
+
+.risk-badge {
+
+    display: inline-block;
+
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    font-weight: 700;
+
+    font-size: 13px;
+
+    margin-left: 6px;
+
+    border: 1px solid rgba(255,255,255,0.15);
+
+}
+
+.risk-badge[data-risk="High"] {
+
+    color: #ef4444;
+
+    background: rgba(239,68,68,0.12);
+}
+
+.risk-badge[data-risk="Medium"] {
+
+    color: #facc15;
+
+    background: rgba(250,204,21,0.12);
+}
+
+.risk-badge[data-risk="Low"] {
+
+    color: #22c55e;
+
+    background: rgba(34,197,94,0.12);
+}
+
+.customer-link {
+
+
+    color: #4db8ff;
+
+    cursor: pointer;
+
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+.customer-link:hover {
+
+    color: white;
+
+    text-decoration: underline;
+}
+
+.escalation-activity-card {
+
+    margin-top: 40px;
+}
+
+
+.activity-item {
+
+    margin-bottom: 18px;
+
+    padding: 18px 20px;
+
+    border-radius: 12px;
+
+    background: #071633;
+}
+
+.activity-card {
+
+    background: #071535;
+
+    padding: 18px;
+
+    border-radius: 14px;
+
+    margin-bottom: 15px;
+
+    margin-top: 10px;
+
+    border-left: 4px solid #29b6f6;
+}
+
+.activity-time {
+
+    font-size: 13px;
+
+    color: #8ea5c9;
+
+    margin-bottom: 8px;
+
+    font-weight: 600;
+}
+
+.activity-message {
+
+    color: white;
+
+    font-size: 15px;
+
+    line-height: 1.5;
+}
+
+
+.activity-item:last-child {
+
+    margin-bottom: 0;
+}
+

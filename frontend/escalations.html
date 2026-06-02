@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Escalations</title>
+
+    <link rel="stylesheet"
+          href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+            🤖 AI Collections
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="index.html">
+                📈 Dashboard
+            </a>
+
+            <a href="customers.html">
+                👥 Customers
+            </a>
+
+            <a href="escalations.html"
+               class="active">
+                ⚠️ Escalations
+            </a>
+
+            <a href="activity.html">
+                🧠 AI Activity
+            </a>
+
+
+            <a href="#">
+                📊 Analytics
+            </a>
+
+            <a href="#">
+                ⚙️ Settings
+            </a>
+
+        </nav>
+
+
+    </div>
+
+    <!-- MAIN -->
+
+    <div class="main-content">
+
+        <h1 class="page-title">
+            Escalation Management Center
+        </h1>
+
+        <!-- KPI CARDS -->
+
+        <section class="metrics">
+
+
+            <div class="card">
+
+                <h3>
+                    Escalated Cases
+                </h3>
+
+                <p id="escalatedCount">
+                    0
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>
+                    High Risk Cases
+                </h3>
+
+                <p id="highRiskCount">
+                    0
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>
+                    Avg Recovery Score
+                </h3>
+
+                <p id="avgRecoveryScore">
+                    0%
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>
+                    Supervisor Actions
+                </h3>
+
+                <p id="supervisorCalls">
+                    0
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- TABLE -->
+
+        <div class="table-container">
+
+            <h2>
+                Escalated Customers
+            </h2>
+
+            <table>
+
+                <thead>
+
+                <tr>
+
+                    <th>Customer</th>
+                    <th>Invoice</th>
+                    <th>Amount</th>
+                    <th>Delayed Days</th>
+                    <th>Recovery Score</th>
+                    <th>Priority Score</th>
+                    <th>Status</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody id="escalationTableBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- ACTIVITY -->
+
+        <div class="card escalation-activity-card">
+
+            <h2>
+                Escalation Activity Feed
+            </h2>
+
+            <div class="activity-feed" id="escalationActivityFeed">
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<!-- CUSTOMER MODAL (reuse same modal as customers page) -->
+
+<div
+    id="customerModal"
+    class="modal"
+>
+
+    <div class="modal-content">
+
+        <span
+            class="close-modal"
+            id="closeModal"
+        >
+            &times;
+        </span>
+
+        <h2>
+            Customer Intelligence Panel
+        </h2>
+
+        <div
+            id="modalBody"
+            class="modal-body"
+        >
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
+
+
