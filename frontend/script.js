@@ -1295,8 +1295,3 @@ if (
     loadActivityCenter();
 
 }
-
-
-
-
-

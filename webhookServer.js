@@ -262,12 +262,112 @@ app.get(
     }
 );
 
+// ANALYTICS API
+
+app.get('/api/analytics', (req, res) => {
+
+    try {
+
+        const customers =
+            readCustomerData();
+
+        const totalCustomers =
+            customers.length;
+
+        const pendingAmount =
+            customers
+                .filter(c => c["Payment Status"] === 'Pending')
+                .reduce((sum, c) =>
+                    sum + Number(c["Due Amount"] || 0), 0);
+
+        const escalatedCases =
+            customers.filter(c => c["Escalation Status"] === 'Yes').length;
+
+        const avgDelayDays =
+            totalCustomers
+                ? customers.reduce((sum, c) => sum + Number(c["Delayed Days"] || 0), 0) / totalCustomers
+                : 0;
+
+        const avgRecoveryScore =
+            totalCustomers
+                ? customers.reduce((sum, c) => sum + Number(c.recoveryScore || 0), 0) / totalCustomers
+                : 0;
+
+        res.json({
+            totalCustomers,
+            pendingAmount,
+            escalatedCases,
+            avgDelayDays: Math.round(avgDelayDays),
+            avgRecoveryScore: Math.round(avgRecoveryScore)
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: 'Failed to fetch analytics'
+        });
+    }
+});
+
+// RECOVERY FUNNEL API
+app.get('/api/recovery-funnel', (req, res) => {
+
+    try {
+
+        const customers =
+            readCustomerData();
+
+        const total =
+            customers.length;
+
+        const contacted =
+            customers.filter(c => Number(c["No Response Count"] || 0) > 0).length;
+
+        const responded =
+            customers.filter(c => {
+
+                const noResp = Number(c["No Response Count"] || 0);
+
+                const contactedAttempts = noResp; // same source field used in requirement
+                return noResp > 0 && noResp < contactedAttempts;
+            }).length;
+
+        // Commitment Date exists
+        const promiseToPay =
+            customers.filter(c => c["Last Commitment Date"]).length;
+
+        const recovered =
+            customers.filter(c => c["Payment Status"] === 'Paid').length;
+
+        const escalated =
+            customers.filter(c => c["Escalation Status"] === 'Yes').length;
+
+        res.json({
+            total,
+            contacted,
+            responded,
+            promiseToPay,
+            recovered,
+            escalated
+        });
+    } catch (error) {
+        console.error('Recovery funnel API Error:', error);
+        res.status(500).json({
+            error: 'Failed to load recovery funnel'
+        });
+    }
+});
+
+
 
 
 
 
 
 // WEBHOOK
+
 
 app.post('/webhook', async (req, res) => {
 

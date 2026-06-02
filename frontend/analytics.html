@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Analytics</title>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <div class="logo">
+
+                <i class="fa-solid fa-robot"></i>
+
+                <h2>AI Collections</h2>
+
+            </div>
+
+            <nav onclick="if (event && event.target){/* allow */}">
+
+
+                <ul>
+
+                    <li>
+                        <i class="fa-solid fa-chart-line"></i>
+                        <a href="/">Dashboard</a>
+                    </li>
+
+                    <a href="/customers.html" onclick="return sidebarNavClick(event, this);">
+                        <li>
+                            👥 Customers
+                        </li>
+                    </a>
+
+                    <a href="/escalations.html" onclick="return sidebarNavClick(event, this);">
+                        <li>
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            Escalations
+                        </li>
+                    </a>
+
+                    <a href="/activity.html" onclick="return sidebarNavClick(event, this);">
+                        <li>
+                            🧠 AI Activity
+                        </li>
+                    </a>
+
+                    <a href="/analytics.html" onclick="return sidebarNavClick(event, this);" style="pointer-events:none;">
+                        <li class="active">
+                            <i class="fa-solid fa-chart-pie"></i>
+                            Analytics
+                        </li>
+                    </a>
+
+                    <a href="/" onclick="return sidebarNavClick(event, this);" style="pointer-events:none;">
+                        <li>
+                            <i class="fa-solid fa-gear"></i>
+                            Settings
+                        </li>
+                    </a>
+
+                </ul>
+
+            </nav>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+
+        <main class="main-content">
+
+            <header class="topbar">
+
+                <h1>
+                    Analytics Center
+                </h1>
+
+                <div class="status">
+
+                    <span class="live-dot"></span>
+
+                    System Active
+
+                </div>
+
+            </header>
+
+            <!-- KPI CARDS -->
+
+            <section class="metrics">
+
+                <div class="card">
+
+                    <h3>Total Customers</h3>
+
+                    <p id="totalCustomers">0</p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Pending Amount</h3>
+
+                    <p id="pendingAmount">₹0</p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Escalated Cases</h3>
+
+                    <p id="escalatedCases">0</p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Avg Delay Days</h3>
+
+                    <p id="avgDelayDays">0</p>
+
+                </div>
+
+            </section>
+
+            <!-- CHARTS -->
+
+            <section class="charts-section">
+
+                <div class="chart-card">
+
+                    <h2>
+                        Payment Status Distribution
+                    </h2>
+
+                    <canvas id="statusChart"></canvas>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h2>
+                        Delay Distribution
+                    </h2>
+
+                    <canvas id="delayChart"></canvas>
+
+                </div>
+
+            </section>
+
+            <section class="charts-section">
+
+                <div class="chart-card">
+
+                    <h2>
+                        Recovery Score Distribution
+                    </h2>
+
+                    <canvas id="recoveryChart"></canvas>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h2>
+                        📈 Recovery Trends
+                    </h2>
+
+                    <canvas id="recoveryTrendChart"></canvas>
+
+                </div>
+
+            </section>
+
+            <section class="charts-section">
+
+                <div class="chart-card">
+
+                    <h2>
+                        Top Risk Accounts
+                    </h2>
+
+                    <div style="overflow-x:auto;">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Customer</th>
+
+                                    <th>Invoice</th>
+
+                                    <th>Amount</th>
+
+                                    <th>Recovery Score</th>
+
+                                    <th>Priority Score</th>
+
+                                    <th>Risk Level</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="riskTableBody"></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h2>
+                        Recovery Funnel
+                    </h2>
+
+                    <div id="recoveryFunnelContainer"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- INSIGHTS -->
+
+            <section class="activity-section">
+
+
+                <div class="section-header">
+
+                    <h2>
+                        🤖 AI Insights
+                    </h2>
+
+                </div>
+
+                <div class="activity-feed" id="aiInsights"></div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script src="analytics.js"></script>
+    <script>
+        async function loadRecoveryFunnel() {
+            try {
+                const container = document.getElementById('recoveryFunnelContainer');
+                if (!container) return;
+
+                const res = await fetch('/api/recovery-funnel');
+                if (!res.ok) throw new Error(`recovery-funnel API failed: ${res.status}`);
+
+                const data = await res.json();
+
+                const stages = [
+                    { key: 'total', label: 'Total Customers', color: '#38bdf8' },
+                    { key: 'contacted', label: 'Contacted', color: '#22d3ee' },
+                    { key: 'responded', label: 'Responded', color: '#facc15' },
+                    { key: 'promiseToPay', label: 'Promise To Pay', color: '#fb923c' },
+                    { key: 'recovered', label: 'Recovered', color: '#22c55e' },
+                    { key: 'escalated', label: 'Escalated', color: '#ef4444' }
+                ];
+
+                const values = stages.map(s => Number(data[s.key] ?? 0));
+                const total = values[0] ?? 0;
+                const maxVal = Math.max(...values, 0);
+
+                const widthFor = (val) => {
+                    if (maxVal <= 0) return 100;
+                    const minWidthPct = 28;
+                    const widthPct = (val / maxVal) * 100;
+                    return Math.max(minWidthPct, widthPct);
+                };
+
+                const fmtPct = (n) => {
+                    if (!Number.isFinite(n)) return '—';
+                    if (n < 0) return '—';
+                    return `${n.toFixed(1)}%`;
+                };
+
+                container.innerHTML = '';
+
+                const wrapper = document.createElement('div');
+                wrapper.style.display = 'flex';
+                wrapper.style.flexDirection = 'column';
+                wrapper.style.gap = '5px';
+                wrapper.style.padding = '2px 0';
+
+                for (let i = 0; i < stages.length; i++) {
+                    const stage = stages[i];
+                    const val = values[i];
+                    const prev = i === 0 ? null : values[i - 1];
+
+                    const ofTotal = total > 0 ? (val / total) * 100 : null;
+                    const ofPrev = (prev === null || prev === 0) ? null : (val / prev) * 100;
+                    const conversionText = ofPrev === null ? '—' : fmtPct(ofPrev);
+
+                    const primarySubText = (() => {
+                        if (val === 0) {
+                            if (stage.key === 'responded') return 'No responses yet';
+                            if (stage.key === 'recovered') return 'No recoveries yet';
+                            if (stage.key === 'promiseToPay') return 'No commitments yet';
+                            return 'None yet';
+                        }
+                        return `${val.toLocaleString('en-IN')} customers`;
+                    })();
+
+                    const widthPct = widthFor(val);
+
+                    const stageEl = document.createElement('div');
+                    stageEl.style.width = `${widthPct}%`;
+                    stageEl.style.alignSelf = 'flex-start';
+                    stageEl.style.background = '#0f172a';
+                    stageEl.style.border = '1px solid rgba(255,255,255,0.06)';
+                    stageEl.style.borderLeft = `6px solid ${stage.color}`;
+                    stageEl.style.borderRadius = '14px';
+                    stageEl.style.padding = '12px 18px';
+
+                    stageEl.innerHTML = `
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;">
+                            <div>
+                                <div style="font-weight:850;color:white;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+                                    <span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${stage.color};"></span>
+                                    ${stage.label}
+                                </div>
+                                <div style="font-size:22px;font-weight:950;color:${stage.color};line-height:1.2;">
+                                    ${val.toLocaleString('en-IN')}
+                                </div>
+                                <div style="font-size:12px;color:#94a3b8;font-weight:700;margin-top:6px;">
+                                    ${primarySubText}
+                                    ${ofTotal === null || val === 0 ? '' : ` · ${fmtPct(ofTotal)} of total`}
+                                </div>
+                            </div>
+                            <div style="text-align:center;min-width:140px;">
+                                <div style="font-size:12px;color:#94a3b8;font-weight:700;margin-bottom:6px;">
+                                    From Previous
+                                </div>
+                                <div style="font-size:16px;font-weight:900;color:white;">
+                                    ${conversionText}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    wrapper.appendChild(stageEl);
+
+                    if (i < stages.length - 1) {
+                        const connector = document.createElement('div');
+                        connector.style.width = '100%';
+                        connector.style.display = 'flex';
+                        connector.style.justifyContent = 'center';
+                        connector.style.alignItems = 'center';
+                        connector.innerHTML = `
+                            <div style="width:12px;height:12px;border-radius:3px;background:rgba(148,163,184,0.22);display:flex;align-items:center;justify-content:center;">
+                                <span style="color:#94a3b8;font-size:12px;line-height:1;">↓</span>
+                            </div>
+                        `;
+                        wrapper.appendChild(connector);
+                    }
+                }
+
+                const note = document.createElement('div');
+                note.style.marginTop = '6px';
+                note.style.fontSize = '11px';
+                note.style.color = 'rgba(148,163,184,0.95)';
+                note.style.textAlign = 'center';
+                note.innerText = 'From Previous uses the server’s stage counts (source fields may be sparse).';
+                wrapper.appendChild(note);
+
+                container.appendChild(wrapper);
+            } catch (error) {
+                console.error('Failed loading recovery funnel', error);
+                const container = document.getElementById('recoveryFunnelContainer');
+                if (container) {
+                    container.innerHTML = '<div class="activity-item">Failed to load recovery funnel.</div>';
+                }
+            }
+        }
+
+        loadRecoveryFunnel();
+    </script>
+
+</body>
+
+</html>
+
+
