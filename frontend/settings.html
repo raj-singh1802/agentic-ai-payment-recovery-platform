@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8" />
+
+    <meta
+
+        name="viewport"
+
+        content="width=device-width, initial-scale=1.0"
+
+    />
+
+    <title>Settings Center V1 - AI Collections</title>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <link
+
+        rel="stylesheet"
+
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+
+    />
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <div class="logo">
+
+                <i class="fa-solid fa-robot"></i>
+
+                <h2>AI Collections</h2>
+
+            </div>
+
+            <nav>
+
+                <ul>
+
+                    <a href="/" onclick="return sidebarNavClick(event, this);">
+
+                        <li id="navDashboard">
+
+                            <i class="fa-solid fa-chart-line"></i>
+
+                            Dashboard
+
+                        </li>
+
+                    </a>
+
+                    <a href="/customers.html" onclick="return sidebarNavClick(event, this);">
+
+                        <li id="navCustomers">
+
+                            👥 Customers
+
+                        </li>
+
+                    </a>
+
+                    <a href="/escalations.html" onclick="return sidebarNavClick(event, this);">
+
+                        <li id="navEscalations">
+
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+
+                            Escalations
+
+                        </li>
+
+                    </a>
+
+                    <a href="/activity.html" onclick="return sidebarNavClick(event, this);">
+
+                        <li id="navActivity">
+
+                            🧠 AI Activity
+
+                        </li>
+
+                    </a>
+
+                    <a href="/analytics.html" onclick="return sidebarNavClick(event, this);">
+
+                        <li id="navAnalytics">
+
+                            <i class="fa-solid fa-chart-pie"></i>
+
+                            Analytics
+
+                        </li>
+
+                    </a>
+
+                    <a href="settings.html" onclick="return sidebarNavClick(event, this);" >
+
+                        <li id="navSettings" class="active">
+
+                            <i class="fa-solid fa-gear"></i>
+
+                            Settings
+
+                        </li>
+
+                    </a>
+
+                </ul>
+
+            </nav>
+
+        </aside>
+
+        <!-- MAIN -->
+
+        <main class="main-content">
+
+            <header class="topbar">
+
+                <h1>Settings Center V1</h1>
+
+                <div class="status">
+
+                    <span class="live-dot"></span>
+
+                    System Active
+
+                </div>
+
+            </header>
+
+            <!-- SYSTEM CONFIGURATION -->
+
+            <section class="table-section">
+
+                <div class="section-header">
+
+                    <h2>System Configuration</h2>
+
+                </div>
+
+                <div class="form-grid">
+
+                    <label class="form-row">
+
+                        <span>Auto Escalation Enabled</span>
+
+                        <label class="toggle">
+
+                            <input id="autoEscalationEnabled" type="checkbox" />
+
+                            <span class="toggle-slider"></span>
+
+                        </label>
+
+                    </label>
+
+                    <label class="form-row">
+
+                        <span>Priority Scoring Enabled</span>
+
+                        <label class="toggle">
+
+                            <input id="priorityScoringEnabled" type="checkbox" />
+
+                            <span class="toggle-slider"></span>
+
+                        </label>
+
+                    </label>
+
+                    <label class="form-row">
+
+                        <span>Workflow Tracking Enabled</span>
+
+                        <label class="toggle">
+
+                            <input id="workflowTrackingEnabled" type="checkbox" />
+
+                            <span class="toggle-slider"></span>
+
+                        </label>
+
+                    </label>
+
+                </div>
+
+            </section>
+
+            <!-- RECOVERY RULES -->
+
+            <section class="table-section">
+
+                <div class="section-header">
+
+                    <h2>Recovery Rules</h2>
+
+                </div>
+
+                <div class="form-grid">
+
+                    <label class="form-row">
+
+                        <span>Escalation Days</span>
+
+                        <input id="escalationDays" type="number" min="0" step="1" />
+
+                    </label>
+
+                    <label class="form-row">
+
+                        <span>High Priority Threshold</span>
+
+                        <input id="highPriorityThreshold" type="number" min="0" step="1" />
+
+                    </label>
+
+                    <label class="form-row">
+
+                        <span>Supervisor Alert Threshold</span>
+
+                        <input id="supervisorAlertThreshold" type="number" min="0" step="1" />
+
+                    </label>
+
+                </div>
+
+            </section>
+
+            <!-- COMMUNICATION SETTINGS -->
+
+            <section class="table-section">
+
+                <div class="section-header">
+
+                    <h2>Communication Settings</h2>
+
+                </div>
+
+                <div class="form-grid">
+
+                    <label class="form-row">
+
+                        <span>Call Retry Attempts</span>
+
+                        <input id="callRetryAttempts" type="number" min="0" step="1" />
+
+                    </label>
+
+                    <label class="form-row">
+
+                        <span>Email Reminder Frequency (days)</span>
+
+                        <input id="emailReminderFrequency" type="number" min="0" step="1" />
+
+                    </label>
+
+                </div>
+
+            </section>
+
+            <!-- AI ENGINE STATUS -->
+
+            <section class="table-section">
+
+                <div class="section-header">
+
+                    <h2>AI Engine Status</h2>
+
+                </div>
+
+                <div class="engine-grid">
+
+                    <div class="card engine-card">
+
+                        <div class="engine-header">
+
+                            <span class="engine-title">Recovery Engine</span>
+
+                            <span class="online-indicator" title="Online"></span>
+
+                        </div>
+
+                        <p class="engine-meta">Online</p>
+
+                    </div>
+
+                    <div class="card engine-card">
+
+                        <div class="engine-header">
+
+                            <span class="engine-title">Priority Engine</span>
+
+                            <span class="online-indicator" title="Online"></span>
+
+                        </div>
+
+                        <p class="engine-meta">Online</p>
+
+                    </div>
+
+                    <div class="card engine-card">
+
+                        <div class="engine-header">
+
+                            <span class="engine-title">Escalation Engine</span>
+
+                            <span class="online-indicator" title="Online"></span>
+
+                        </div>
+
+                        <p class="engine-meta">Online</p>
+
+                    </div>
+
+                    <div class="card engine-card">
+
+                        <div class="engine-header">
+
+                            <span class="engine-title">Workflow Engine</span>
+
+                            <span class="online-indicator" title="Online"></span>
+
+                        </div>
+
+                        <p class="engine-meta">Online</p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- CONFIGURATION ACTIVITY -->
+
+            <section class="table-section">
+
+                <div class="section-header">
+
+                    <h2>Configuration Activity</h2>
+
+                </div>
+
+                <div id="configActivityFeed" class="activity-feed"></div>
+
+            </section>
+
+            <!-- DATA MANAGEMENT -->
+
+            <section class="table-section">
+
+                <div class="section-header">
+
+                    <h2>Data Management</h2>
+
+                </div>
+
+                <div class="data-actions">
+
+                    <button class="action-btn" id="exportCustomers">Export Customers</button>
+
+                    <button class="action-btn" id="exportAnalytics">Export Analytics</button>
+
+                    <button class="action-btn" id="exportActivityLogs">Export Activity Logs</button>
+
+                </div>
+
+                <div class="muted-hint" id="exportHint" style="margin-top: 12px;">
+
+                    Exports are UI-only for V1 (no backend changes).
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+<script src="script.js"></script>
+
+    <script src="settings.js"></script>
+
+    <script>
+        // Mark active sidebar item based on this page.
+        // (So navigation works correctly even though script.js is shared across pages.)
+        (function () {
+            const activePath = window.location.pathname || '';
+            const settingsLi = document.getElementById('navSettings');
+            if (settingsLi && (activePath.endsWith('/settings.html') || activePath.endsWith('settings.html'))) {
+                document.querySelectorAll('.sidebar li.active').forEach(x => x.classList.remove('active'));
+                settingsLi.classList.add('active');
+            }
+        })();
+    </script>
+
+</body>
+
+</html>
+

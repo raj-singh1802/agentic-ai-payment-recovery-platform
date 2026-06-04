@@ -1140,17 +1140,18 @@ if (socket) {
 }
 
 
-loadCustomers();
+// Only run page-specific loaders when their target DOM exists.
+if (document.getElementById('customerTableBody')) {
 
-if (
-    document.getElementById(
-        'escalationTableBody'
-    )
-) {
-
-    loadEscalations();
+    loadCustomers();
 
 }
+
+if (document.getElementById('escalationTableBody')) {
+
+    loadEscalations();
+}
+
 
 async function loadActivityCenter() {
 
